@@ -7,7 +7,7 @@ drinkBtn.addEventListener("click", drink);
 let playBtn = document.getElementById("find-play");
 playBtn.addEventListener("click", play);
 
-const apiKey = 'AIzaSyCRuea9PeF-8ihC4ipRNqzVhLZCGmUTwYw';
+const apiKey = 'YOU_API_KEY';
 let radius = 1500;
 let userLatitude, userLongitude, keyword, type, randomBusiness, randomBusinessName;
 let map;
