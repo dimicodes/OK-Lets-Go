@@ -1,0 +1,34 @@
+body {
+    background-color: #6d4394;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the buttons horizontally */
+    justify-content: center; /* Center the buttons vertically if you want */
+    height: 100vh; /* Use the full height of the viewport */
+    background-color: #9f80bc;
+    border-radius: 10px;
+    width: 30%;
+    height: 50%;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button-container button {
+    margin: 20px; /* Space between buttons */
+    padding: 15px;
+    width: 95px;
+    background-color: whitesmoke;
+    border: none;
+    border-radius: 5px;
+    color: #8959b7;
+    text-align: center;
+    text-decoration: none;
+    display: block; /* Change this to block from inline-block */
+    font: 600 1em 'Raleway', sans-serif;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer; /* To indicate the buttons are clickable */
+}
