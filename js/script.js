@@ -7,11 +7,13 @@ drinkBtn.addEventListener("click", drink);
 let playBtn = document.getElementById("find-play");
 playBtn.addEventListener("click", play);
 
-const apiKey = 'YOU_API_KEY';
-let radius = 1500;
+const apiKey = 'AIzaSyCRuea9PeF-8ihC4ipRNqzVhLZCGmUTwYw';
+let radius = 1000;
 let userLatitude, userLongitude, keyword, type, randomBusiness, randomBusinessName;
 let map;
 let service;
+let locationRetrieved = false;
+
 
 function initMap() {
     // Initialize map
@@ -29,20 +31,34 @@ function initMap() {
 
 // Button-click functions
 function eat() {
+    if (!locationRetrieved) {
+        console.error("Location not retrieved yet.");
+        return; // Exit the function if the location has not been retrieved
+    }
     keyword = "restaurant";
     type = "restaurant";
     fetchBusiness(keyword, userLatitude, userLongitude, radius, type);
 }
 
 function drink() {
+    if (!locationRetrieved) {
+        console.error("Location not retrieved yet.");
+        return; // Exit the function if the location has not been retrieved
+    }
     keyword = "bar";
     type = "bar";
     fetchBusiness(keyword, userLatitude, userLongitude, radius, type);
 }
 
 function play() {
-    keyword = "entertainment";
-    type = "entertainment";
+    if (!locationRetrieved) {
+        console.error("Location not retrieved yet.");
+        return; // Exit the function if the location has not been retrieved
+    }
+    keyword = "";
+    const typeList = ['amusement_park', 'aquarium', 'bowling_alley', 'casino', 'zoo', 'tourist_attraction', 'museum'];
+    const randomIndex = Math.floor(Math.random() * typeList.length);
+    type = typeList[randomIndex];
     fetchBusiness(keyword, userLatitude, userLongitude, radius, type);
 }
 
@@ -52,6 +68,7 @@ function getLocation() {
         (position) => {
             userLatitude = position.coords.latitude;
             userLongitude = position.coords.longitude;
+            locationRetrieved = true;
             console.log("Latitude:", userLatitude, "Longitude:", userLongitude);
         },
         (error) => {
@@ -59,62 +76,6 @@ function getLocation() {
         },
         { enableHighAccuracy: true, timeout: 50000, maximumAge: 0 }
     );
-}
-
-
-function showBusinessPreview(business) {
-    // Remove any existing preview container
-    const existingPreview = document.getElementById('business-preview');
-    if (existingPreview) {
-        existingPreview.remove();
-    }
-
-    // Create the preview container
-    const previewContainer = document.createElement('div');
-    previewContainer.id = 'business-preview';
-    previewContainer.style = 'position: fixed; bottom: 10px; left: 10px; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
-    
-    // Add business details to the preview
-    const businessName = document.createElement('h2');
-    businessName.textContent = business.name;
-    previewContainer.appendChild(businessName);
-
-    const businessRating = document.createElement('p');
-    businessRating.textContent = `Rating: ${business.rating}`;
-    previewContainer.appendChild(businessRating);
-
-    // Check if the business has photos
-    if (randomBusiness.photos && randomBusiness.photos.length > 0) {
-        // Get the photo reference from the first photo in the array
-        const photoReference = randomBusiness.photos[0].photo_reference;
-        const maxWidth = 400; // or any other size you prefer
-    
-        // Construct the URL for the photo
-        const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${apiKey}`;
-    
-        // Use the URL for an <img> element or as a background for a div, etc.
-        const businessPhoto = document.createElement('img');
-        businessPhoto.src = photoUrl;
-        businessPhoto.alt = randomBusiness.name;
-        previewContainer.appendChild(businessPhoto);
-    } else {
-        // Handle the case where no photos are available
-        console.log("No photos available for this business.");
-    }
-
-
-    // Add the "Let's Go" button
-    const letsGoButton = document.createElement('button');
-    letsGoButton.textContent = "Let's Go";
-    letsGoButton.onclick = function() {
-        // Open Google Maps with directions
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${randomBusinessName}`;
-        window.open(directionsUrl, '_blank');
-    };
-    previewContainer.appendChild(letsGoButton);
-
-    // Append the preview container to the body
-    document.body.appendChild(previewContainer);
 }
 
 
@@ -134,7 +95,9 @@ function fetchBusiness(keyword, latitude, longitude, radius, type) {
                 const randomBusiness = filteredBusinesses[randomIndex];
                 console.log("Random Business Selected: ", randomBusiness);
                 randomBusinessName = randomBusiness.name;
-                showBusinessPreview(randomBusiness);
+                // Open Google Maps with directions
+                const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${randomBusinessName}`;
+                window.open(directionsUrl, '_blank');
 
             } else {
                 console.log("No businesses found matching the criteria.");
@@ -150,6 +113,7 @@ function filterBusinesses(businesses) {
         business.rating >= 4.5 &&
         business.user_ratings_total >= 500 &&
         (!business.price_level || (business.price_level <= 2))
+
         // Note: 'open_now' property might not be available due to the Places API changes
     );
 }

@@ -2,6 +2,14 @@ body {
     background-color: #6d4394;
 }
 
+img, #logo {
+    width: 150px;
+    border-radius: 10px;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
 .button-container {
     display: flex;
     flex-direction: column;
@@ -12,9 +20,10 @@ body {
     border-radius: 10px;
     width: 30%;
     height: 50%;
-    margin-top: 20%;
+    margin-top: 5%;
     margin-left: auto;
     margin-right: auto;
+    padding: 30px;
 }
 
 .button-container button {
